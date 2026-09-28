@@ -1,0 +1,101 @@
+
+cd patching_simple
+
+--- Linux
+./patch_run_passing_instanceid_as_argument.sh -i i-02assc95594webl00c -a Install -o L
+
+
+--- Windows
+./patch_run_passing_instanceid_as_argument.sh -i i-0203bnyrt34c4ea472f -a Scan -o W
+
+
+
+ user2020@V-TEST: patching_simple $ 
+ user2020@V-TEST: patching_simple $ 
+ user2020@V-TEST: patching_simple $ pwd
+/home/user2020/DEVELOPMENT/AWS-Patching-CLI/patching_simple
+ user2020@V-TEST: patching_simple $ 
+ user2020@V-TEST: patching_simple $ 
+ user2020@V-TEST: patching_simple $ 
+ user2020@V-TEST: patching_simple $ ./patch_run_passing_instanceid_as_argument.sh -i i-02assc95594webl00c -a Install -o L
+
+--- from ./patch_run_passing_instanceid_as_argument.sh
+ Instance_ID: i-02assc95594webl00c
+ Action Type: Install
+
+
+..Scanning for new patches on EC2: i-02assc95594webl00c ()
+
+
+..COMMAND_ID: a161f91c-ee57-40a1-abd0-a229b05080fe
+
+STATUSDETAILS_LIST = InProgress
+
+Install command status: InProgress
+........
+Install command status: InProgress
+........
+Install command status: InProgress
+........
+Install command status: InProgress
+........
+Install command status: Success
+
+aws s3 ls s3://S3-BUCKET-NAME/system-manager-patching/a161f91c-ee57-40a1-abd0-a229b05080fe/i-02assc95594webl00c/awsrunShellScript/PatchLinux/stderr --profile ARDSAdmin
+
+aws s3 ls s3://S3-BUCKET-NAME/system-manager-patching/a161f91c-ee57-40a1-abd0-a229b05080fe/i-02assc95594webl00c/awsrunShellScript/PatchLinux/stdout --profile ARDSAdmin
+2023-05-02 12:43:45     155744 stdout
+
+aws s3 cp s3://S3-BUCKET-NAME/system-manager-patching/a161f91c-ee57-40a1-abd0-a229b05080fe/i-02assc95594webl00c/awsrunShellScript/PatchLinux/stdout output/202305021243--i-02assc95594webl00c--a161f91c-ee57-40a1-abd0-a229b05080fe-stdout --profile ARDSAdmin
+download: s3://S3-BUCKET-NAME/system-manager-patching/a161f91c-ee57-40a1-abd0-a229b05080fe/i-02assc95594webl00c/awsrunShellScript/PatchLinux/stdout to output/202305021243--i-02assc95594webl00c--a161f91c-ee57-40a1-abd0-a229b05080fe-stdout
+
+
+
+Instance is Compliant
+05/02/2023 12:43:42 root [INFO]:  Instance is Compliant 
+
+
+
+ user2020@V-TEST: patching_simple $ 
+ user2020@V-TEST: patching_simple $ 
+ user2020@V-TEST: patching_simple $ 
+ user2020@V-TEST: patching_simple $ 
+ user2020@V-TEST: patching_simple $ 
+
+
+
+
+
+ user2020@V-TEST: patching_simple $ 
+ user2020@V-TEST: patching_simple $ 
+ user2020@V-TEST: patching_simple $ ./patch_run_passing_instanceid_as_argument.sh -i i-0203bnyrt34c4ea472f -a Scan -o W
+
+..Scanning for new patches on EC2: i-0203bnyrt34c4ea472f ()
+
+
+..COMMAND_ID: 19845d9b-cfde-406c-bacc-a9215d8f55c3
+
+STATUSDETAILS_LIST = InProgress
+
+Scan command status: InProgress
+........
+Scan command status: InProgress
+........
+Scan command status: InProgress
+........
+Scan command status: Success
+
+aws s3 ls s3://S3-BUCKET-NAME/system-manager-patching/19845d9b-cfde-406c-bacc-a9215d8f55c3/i-0203bnyrt34c4ea472f/awsrunPowerShellScript/PatchWindows/stderr --profile ARDSAdmin
+
+aws s3 ls s3://S3-BUCKET-NAME/system-manager-patching/19845d9b-cfde-406c-bacc-a9215d8f55c3/i-0203bnyrt34c4ea472f/awsrunPowerShellScript/PatchWindows/stdout --profile ARDSAdmin
+2023-05-02 15:15:20       1513 stdout
+
+aws s3 cp s3://S3-BUCKET-NAME/system-manager-patching/19845d9b-cfde-406c-bacc-a9215d8f55c3/i-0203bnyrt34c4ea472f/awsrunPowerShellScript/PatchWindows/stdout output/202305021515--i-0203bnyrt34c4ea472f--19845d9b-cfde-406c-bacc-a9215d8f55c3-stdout --profile ARDSAdmin
+download: s3://S3-BUCKET-NAME/system-manager-patching/19845d9b-cfde-406c-bacc-a9215d8f55c3/i-0203bnyrt34c4ea472f/awsrunPowerShellScript/PatchWindows/stdout to output/202305021515--i-0203bnyrt34c4ea472f--19845d9b-cfde-406c-bacc-a9215d8f55c3-stdout
+
+Scan found the following updates missing:
+Scan found the following updates missing:
+KB5025228
+
+
+ user2020@V-TEST: patching_simple $ 
