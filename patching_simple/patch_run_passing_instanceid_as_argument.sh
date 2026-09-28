@@ -174,18 +174,18 @@ case ${selected_win_or_linux} in
         case ${SCAN_INSTALL} in
             'Scan')
                 echo ""
-                prom=$(cat "${DIR_LOCAL_TEMP_OUTPUT}"/"${LOG_PREFIX}"-stdout | grep -A2 'Scan found the following updates missing:' | grep -v grep)
+                prom=$(grep -A2 'Scan found the following updates missing:' "${DIR_LOCAL_TEMP_OUTPUT}"/"${LOG_PREFIX}"-stdout | grep -v grep)
                 [[ $? -eq 0 ]] && echo -e "${red_color}Scan found the following updates missing:${clear_color}"
                 echo -e "${prom}"
 
-                prom=$(cat "${DIR_LOCAL_TEMP_OUTPUT}"/"${LOG_PREFIX}"-stdout | grep 'Scan found no missing updates.' | grep -v grep)
+                prom=$(grep 'Scan found no missing updates.' "${DIR_LOCAL_TEMP_OUTPUT}"/"${LOG_PREFIX}"-stdout | grep -v grep)
                 [[ $? -eq 0 ]] && echo -e "${yellow_color}Scan found no missing updates.${clear_color}"
                 echo -e "${prom}"
                 echo ""
                 ;;
             'Install')
                 echo ""
-                prom=$(cat "${DIR_LOCAL_TEMP_OUTPUT}"/"${LOG_PREFIX}"-stdout | grep -A7 'Installation Results' | grep -v grep)
+                prom=$(grep -A7 'Installation Results' "${DIR_LOCAL_TEMP_OUTPUT}"/"${LOG_PREFIX}"-stdout | grep -v grep)
                 [[ $? -eq 0 ]] && echo -e "${yellow_color}Installation Results${clear_color}"
                 echo -e "${prom}"
                 echo ""
@@ -200,18 +200,18 @@ case ${selected_win_or_linux} in
         case ${SCAN_INSTALL} in
             'Scan')
                 echo -e "\n\n"
-                prom=$(cat "${DIR_LOCAL_TEMP_OUTPUT}"/"${LOG_PREFIX}"-stdout | grep 'Instance is Compliant' | grep -v grep)
+                prom=$(grep 'Instance is Compliant' "${DIR_LOCAL_TEMP_OUTPUT}"/"${LOG_PREFIX}"-stdout | grep -v grep)
                 [[ $? -eq 0 ]] && echo -e "${red_color}Instance is Compliant${clear_color}"
                 echo -e "${prom}"
                 echo ""
-                prom=$(cat "${DIR_LOCAL_TEMP_OUTPUT}"/"${LOG_PREFIX}"-stdout | grep -A3 'Instance is Non-Compliant' | grep -v grep)
+                prom=$(grep -A3 'Instance is Non-Compliant' "${DIR_LOCAL_TEMP_OUTPUT}"/"${LOG_PREFIX}"-stdout | grep -v grep)
                 [[ $? -eq 0 ]] && echo -e "${red_color}Instance is Non-Compliant${clear_color}"
                 echo -e "${prom}"
                 echo -e "\n\n"
                 ;;
             'Install')
                 echo -e "\n\n"
-                prom=$(cat "${DIR_LOCAL_TEMP_OUTPUT}"/"${LOG_PREFIX}"-stdout | grep 'Instance is Compliant' | grep -v grep)
+                prom=$(grep 'Instance is Compliant' "${DIR_LOCAL_TEMP_OUTPUT}"/"${LOG_PREFIX}"-stdout | grep -v grep)
                 [[ $? -eq 0 ]] && echo -e "${yellow_color}Instance is Compliant${clear_color}"
                 echo -e "${prom}"
                 echo -e "\n\n"
