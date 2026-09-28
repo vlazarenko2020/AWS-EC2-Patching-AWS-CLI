@@ -49,7 +49,7 @@ f_process_script_arguments()
 
 f_action_run_patch_scan()
 {
-    echo -e "\n..Scanning for new patches on EC2: ${selected_instance_id} (${selected_instance_name})\n"
+    echo -e "\n..Scanning for new patches on EC2: ${selected_instance_id}\n"
     COMMAND_ID=$(aws ssm send-command --document-name "AWS-RunPatchBaseline" \
                         --document-version "1" \
                         --targets '[{"Key":"InstanceIds","Values":["'"${selected_instance_id}"'"]}]' \
@@ -88,17 +88,12 @@ f_action_run_patch_install()
 
 f_sleepWithIndicator() {
     secondsBetweenPrint=2
-    if [[ $1 ]]; then
-        HowManyTimes=$(( $1 / secondsBetweenPrint ))
-    else
-        HowManyTimes=$(( 300 / secondsBetweenPrint ))
-    fi
 
     declare -i second_passed=0
     while [[ ${1} -ge ${second_passed} ]]; do
         echo -n "."
         /usr/bin/sleep ${secondsBetweenPrint}
-        (( second_passed = ${second_passed} + ${secondsBetweenPrint} ))
+        (( second_passed = second_passed + secondsBetweenPrint ))
     done
 }
 
@@ -107,21 +102,21 @@ f_download_patch_err_and_out_files()
 {
     bucket_beginning="$1"
     echo -e "\naws s3 ls ${bucket_beginning}/stderr --profile ${MY_PROFILE}"
-                aws s3 ls "${bucket_beginning}"/stderr --profile ${MY_PROFILE}
+               aws s3 ls "${bucket_beginning}"/stderr --profile ${MY_PROFILE}
     command_exit_status=$?
     if [[ ${command_exit_status} -eq 0 ]]; then
 
             echo -e "\naws s3 cp ${bucket_beginning}/stderr ${DIR_LOCAL_TEMP_OUTPUT}/${LOG_PREFIX}-stderr --profile ${MY_PROFILE}"
-                        aws s3 cp "${bucket_beginning}"/stderr "${DIR_LOCAL_TEMP_OUTPUT}"/"${LOG_PREFIX}"-stderr --profile ${MY_PROFILE}
+                       aws s3 cp "${bucket_beginning}"/stderr "${DIR_LOCAL_TEMP_OUTPUT}"/"${LOG_PREFIX}"-stderr --profile ${MY_PROFILE}
     fi
 
     echo -e "\naws s3 ls ${bucket_beginning}/stdout --profile ${MY_PROFILE}"
-                aws s3 ls "${bucket_beginning}"/stdout --profile ${MY_PROFILE}
+               aws s3 ls "${bucket_beginning}"/stdout --profile ${MY_PROFILE}
     command_exit_status=$?
     if [[ ${command_exit_status} -eq 0 ]]; then
 
             echo -e "\naws s3 cp ${bucket_beginning}/stdout ${DIR_LOCAL_TEMP_OUTPUT}/${LOG_PREFIX}-stdout --profile ${MY_PROFILE}"
-                        aws s3 cp "${bucket_beginning}"/stdout "${DIR_LOCAL_TEMP_OUTPUT}"/"${LOG_PREFIX}"-stdout --profile ${MY_PROFILE}
+                       aws s3 cp "${bucket_beginning}"/stdout "${DIR_LOCAL_TEMP_OUTPUT}"/"${LOG_PREFIX}"-stdout --profile ${MY_PROFILE}
     fi
 }
 
@@ -160,6 +155,7 @@ do
 done
 
 LOG_PREFIX="$(date '+%Y%m%d%H%M')--${selected_instance_id}--${COMMAND_ID}"
+log_file_stdout="${DIR_LOCAL_TEMP_OUTPUT}/${LOG_PREFIX}-stdout"
 
 red_color='\033[0;31m'
 yellow_color='\033[0;33m'
@@ -174,19 +170,19 @@ case ${selected_win_or_linux} in
         case ${SCAN_INSTALL} in
             'Scan')
                 echo ""
-                prom=$(grep -A2 'Scan found the following updates missing:' "${DIR_LOCAL_TEMP_OUTPUT}"/"${LOG_PREFIX}"-stdout | grep -v grep)
-                [[ $? -eq 0 ]] && echo -e "${red_color}Scan found the following updates missing:${clear_color}"
+                prom=$(grep -A2 'Scan found the following updates missing:' "${log_file_stdout}")
+                [[ -n "${prom}" ]] && echo -e "${red_color}Scan found the following updates missing:${clear_color}"
                 echo -e "${prom}"
 
-                prom=$(grep 'Scan found no missing updates.' "${DIR_LOCAL_TEMP_OUTPUT}"/"${LOG_PREFIX}"-stdout | grep -v grep)
-                [[ $? -eq 0 ]] && echo -e "${yellow_color}Scan found no missing updates.${clear_color}"
+                prom=$(grep 'Scan found no missing updates.' "${log_file_stdout}")
+                [[ -n "${prom}" ]] && echo -e "${yellow_color}Scan found no missing updates.${clear_color}"
                 echo -e "${prom}"
                 echo ""
                 ;;
             'Install')
                 echo ""
-                prom=$(grep -A7 'Installation Results' "${DIR_LOCAL_TEMP_OUTPUT}"/"${LOG_PREFIX}"-stdout | grep -v grep)
-                [[ $? -eq 0 ]] && echo -e "${yellow_color}Installation Results${clear_color}"
+                prom=$(grep -A7 'Installation Results' "${log_file_stdout}")
+                [[ -n "${prom}" ]] && echo -e "${yellow_color}Installation Results${clear_color}"
                 echo -e "${prom}"
                 echo ""
                 ;;
@@ -200,19 +196,19 @@ case ${selected_win_or_linux} in
         case ${SCAN_INSTALL} in
             'Scan')
                 echo -e "\n\n"
-                prom=$(grep 'Instance is Compliant' "${DIR_LOCAL_TEMP_OUTPUT}"/"${LOG_PREFIX}"-stdout | grep -v grep)
-                [[ $? -eq 0 ]] && echo -e "${red_color}Instance is Compliant${clear_color}"
+                prom=$(grep 'Instance is Compliant' "${log_file_stdout}")
+                [[ -n "${prom}" ]] && echo -e "${red_color}Instance is Compliant${clear_color}"
                 echo -e "${prom}"
                 echo ""
-                prom=$(grep -A3 'Instance is Non-Compliant' "${DIR_LOCAL_TEMP_OUTPUT}"/"${LOG_PREFIX}"-stdout | grep -v grep)
-                [[ $? -eq 0 ]] && echo -e "${red_color}Instance is Non-Compliant${clear_color}"
+                prom=$(grep -A3 'Instance is Non-Compliant' "${log_file_stdout}")
+                [[ -n "${prom}" ]] && echo -e "${red_color}Instance is Non-Compliant${clear_color}"
                 echo -e "${prom}"
                 echo -e "\n\n"
                 ;;
             'Install')
                 echo -e "\n\n"
-                prom=$(grep 'Instance is Compliant' "${DIR_LOCAL_TEMP_OUTPUT}"/"${LOG_PREFIX}"-stdout | grep -v grep)
-                [[ $? -eq 0 ]] && echo -e "${yellow_color}Instance is Compliant${clear_color}"
+                prom=$(grep 'Instance is Compliant' "${log_file_stdout}")
+                [[ -n "${prom}" ]] && echo -e "${yellow_color}Instance is Compliant${clear_color}"
                 echo -e "${prom}"
                 echo -e "\n\n"
                 ;;
