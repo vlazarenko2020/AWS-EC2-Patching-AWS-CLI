@@ -1,0 +1,8 @@
+i-0123456789abcdef8|DS|L|"LAMBDA-DEVELOPMENT-SERVER"
+i-0123456789abcdef0|DS|L|"Test Server (Dev)"
+i-0123456789abcdef4|DS|L|"DNS Server"
+i-0123456789abcdef1|DS|W|"VIsual-Test-Instance"
+i-0123456789abcdef2|DS|L|"Mail relay to Office"
+i-0123456789abcdefa|OF|L|"OpenSystemAccount - DNS Server"
+i-0123456789abcdef6|OF|L|"OpenSystemAccount - M9-TS"
+i-0123456789abcdef9|SD|L|"Java Order App"

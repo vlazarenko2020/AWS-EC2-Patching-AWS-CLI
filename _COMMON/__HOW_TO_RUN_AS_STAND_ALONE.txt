@@ -1,0 +1,63 @@
+
+
+
+
+./menu.sh -f ../backup/info/InstanceIDs_to_patch.txt
+ll ../backup/info/InstanceIDs_to_patch.txt*
+cat ../backup/info/InstanceIDs_to_patch.txt.current_selected_line.tmp
+
+
+
+
+ user2020@V-TEST: _COMMON $
+ user2020@V-TEST: _COMMON $
+ user2020@V-TEST: _COMMON $ ./menu.sh -f ../backup/info/InstanceIDs_to_patch.txt
+
+ Input file with many lines:    ../backup/info/InstanceIDs_to_patch.txt
+ Temp file with selected lines: ../backup/info/InstanceIDs_to_patch.txt
+
+
+..Deleting old file with selected line (../backup/info/InstanceIDs_to_patch.txt.current_selected_line.tmp).
+
+------------------------------------------------
+ 1 - arn:aws:ec2:us-east-1:111111111111:instance/i-0123456789abcdef0|DS|L|Test Server (Dev)
+ 2 - arn:aws:ec2:us-east-1:111111111111:instance/i-0123456789abcdef8|DS|L|LAMBDA-DEVELOPMENT-SERVER (PIM-MULE-VPC)
+ 3 - arn:aws:ec2:us-east-1:111111111111:instance/i-0123456789abcdef1|DS|W|VIsual-Test-Instance
+ 4 - arn:aws:ec2:us-east-1:111111111111:instance/i-balvanka111111111|OF|W|BALVANKA1
+ 5 - arn:aws:ec2:us-east-1:111111111111:instance/i-balvanka222222222|SD|W|BALVANKA2
+99 - Exit
+------------------------------------------------
+-- What is your selection: 3
+
+3 was selected.
+
+
+..You selected line is
+ arn:aws:ec2:us-east-1:111111111111:instance/i-0123456789abcdef1|DS|W|VIsual-Test-Instance
+
+
+ user2020@V-TEST: _COMMON $
+ user2020@V-TEST: _COMMON $
+ user2020@V-TEST: _COMMON $
+ user2020@V-TEST: _COMMON $
+ user2020@V-TEST: _COMMON $
+ user2020@V-TEST: _COMMON $
+ user2020@V-TEST: _COMMON $
+ user2020@V-TEST: _COMMON $
+ user2020@V-TEST: _COMMON $
+ user2020@V-TEST: _COMMON $
+ user2020@V-TEST: _COMMON $ ll ../backup/info/InstanceIDs_to_patch.txt*
+-rw-rw-r-- 1 user2020 user2020 437 Jan  6 15:05 ../backup/info/InstanceIDs_to_patch.txt
+-rw-rw-r-- 1 user2020 user2020  91 Jan 12 10:40 ../backup/info/InstanceIDs_to_patch.txt.current_selected_line.tmp
+ user2020@V-TEST: _COMMON $
+ user2020@V-TEST: _COMMON $
+ user2020@V-TEST: _COMMON $
+ user2020@V-TEST: _COMMON $
+
+ user2020@V-TEST: _COMMON $
+ user2020@V-TEST: _COMMON $
+ user2020@V-TEST: _COMMON $ cat ../backup/info/InstanceIDs_to_patch.txt.current_selected_line.tmp
+arn:aws:ec2:us-east-1:111111111111:instance/i-0123456789abcdef1|DS|W|VIsual-Test-Instance
+ user2020@V-TEST: _COMMON $
+ user2020@V-TEST: _COMMON $
+ user2020@V-TEST: _COMMON $
