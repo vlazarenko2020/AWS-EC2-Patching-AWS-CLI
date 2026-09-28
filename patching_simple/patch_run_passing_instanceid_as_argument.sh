@@ -12,8 +12,8 @@ DIR_LOCAL_TEMP_OUTPUT='output'
 
 f_process_script_arguments()
 {
-    if [[ $# -lt 6 ]]; then
-        echo -e "\nERROR: Need a parameter: -i <instanceID> -a <action-type(S/I)> -o <OperationSystem(L/W)> [-b <S3BucketName>]\n" >&2
+    if [[ $# -lt 8 ]]; then
+        echo -e "\nERROR: Need a parameter: -i <instanceID> -a <action-type(S/I)> -o <OperationSystem(L/W)> -b <S3BucketName>\n" >&2
         exit 1
     fi
 
@@ -39,6 +39,11 @@ f_process_script_arguments()
                 ;;
         esac
     done
+
+    if [[ -z "${BUCKET_NAME}" ]]; then
+        echo -e "\nERROR: -b <S3BucketName> is required\n" >&2
+        exit 1
+    fi
 }
 
 
@@ -102,21 +107,21 @@ f_download_patch_err_and_out_files()
 {
     bucket_beginning="$1"
     echo -e "\naws s3 ls ${bucket_beginning}/stderr --profile ${MY_PROFILE}"
-                aws s3 ls ${bucket_beginning}/stderr --profile ${MY_PROFILE}
+                aws s3 ls "${bucket_beginning}"/stderr --profile ${MY_PROFILE}
     command_exit_status=$?
-    if [[ ${command_exit_status} -eq 0 ]]; then 
+    if [[ ${command_exit_status} -eq 0 ]]; then
 
             echo -e "\naws s3 cp ${bucket_beginning}/stderr ${DIR_LOCAL_TEMP_OUTPUT}/${LOG_PREFIX}-stderr --profile ${MY_PROFILE}"
-                        aws s3 cp ${bucket_beginning}/stderr ${DIR_LOCAL_TEMP_OUTPUT}/${LOG_PREFIX}-stderr --profile ${MY_PROFILE}
+                        aws s3 cp "${bucket_beginning}"/stderr "${DIR_LOCAL_TEMP_OUTPUT}"/"${LOG_PREFIX}"-stderr --profile ${MY_PROFILE}
     fi
 
     echo -e "\naws s3 ls ${bucket_beginning}/stdout --profile ${MY_PROFILE}"
-                aws s3 ls ${bucket_beginning}/stdout --profile ${MY_PROFILE}
+                aws s3 ls "${bucket_beginning}"/stdout --profile ${MY_PROFILE}
     command_exit_status=$?
-    if [[ ${command_exit_status} -eq 0 ]]; then 
+    if [[ ${command_exit_status} -eq 0 ]]; then
 
             echo -e "\naws s3 cp ${bucket_beginning}/stdout ${DIR_LOCAL_TEMP_OUTPUT}/${LOG_PREFIX}-stdout --profile ${MY_PROFILE}"
-                        aws s3 cp ${bucket_beginning}/stdout ${DIR_LOCAL_TEMP_OUTPUT}/${LOG_PREFIX}-stdout --profile ${MY_PROFILE}
+                        aws s3 cp "${bucket_beginning}"/stdout "${DIR_LOCAL_TEMP_OUTPUT}"/"${LOG_PREFIX}"-stdout --profile ${MY_PROFILE}
     fi
 }
 
@@ -164,23 +169,23 @@ case ${selected_win_or_linux} in
     'W')
         bucket_beginning="s3://${BUCKET_NAME}/${BUCKET_PATH}${COMMAND_ID}/${selected_instance_id}/awsrunPowerShellScript/PatchWindows"
         # ------------------------------------------------------
-        f_download_patch_err_and_out_files ${bucket_beginning}
+        f_download_patch_err_and_out_files "${bucket_beginning}"
         # ------------------------------------------------------
         case ${SCAN_INSTALL} in
-            'Scan') 
+            'Scan')
                 echo ""
-                prom=$(cat ${DIR_LOCAL_TEMP_OUTPUT}/${LOG_PREFIX}-stdout | grep -A2 'Scan found the following updates missing:' | grep -v grep)
+                prom=$(cat "${DIR_LOCAL_TEMP_OUTPUT}"/"${LOG_PREFIX}"-stdout | grep -A2 'Scan found the following updates missing:' | grep -v grep)
                 [[ $? -eq 0 ]] && echo -e "${red_color}Scan found the following updates missing:${clear_color}"
                 echo -e "${prom}"
 
-                prom=$(cat ${DIR_LOCAL_TEMP_OUTPUT}/${LOG_PREFIX}-stdout | grep 'Scan found no missing updates.' | grep -v grep)
+                prom=$(cat "${DIR_LOCAL_TEMP_OUTPUT}"/"${LOG_PREFIX}"-stdout | grep 'Scan found no missing updates.' | grep -v grep)
                 [[ $? -eq 0 ]] && echo -e "${yellow_color}Scan found no missing updates.${clear_color}"
                 echo -e "${prom}"
                 echo ""
                 ;;
             'Install')
                 echo ""
-                prom=$(cat ${DIR_LOCAL_TEMP_OUTPUT}/${LOG_PREFIX}-stdout | grep -A7 'Installation Results' | grep -v grep)
+                prom=$(cat "${DIR_LOCAL_TEMP_OUTPUT}"/"${LOG_PREFIX}"-stdout | grep -A7 'Installation Results' | grep -v grep)
                 [[ $? -eq 0 ]] && echo -e "${yellow_color}Installation Results${clear_color}"
                 echo -e "${prom}"
                 echo ""
@@ -190,23 +195,23 @@ case ${selected_win_or_linux} in
     'L')
         bucket_beginning="s3://${BUCKET_NAME}/${BUCKET_PATH}${COMMAND_ID}/${selected_instance_id}/awsrunShellScript/PatchLinux"
         # ------------------------------------------------------
-        f_download_patch_err_and_out_files ${bucket_beginning}
+        f_download_patch_err_and_out_files "${bucket_beginning}"
         # ------------------------------------------------------
         case ${SCAN_INSTALL} in
-            'Scan') 
+            'Scan')
                 echo -e "\n\n"
-                prom=$(cat ${DIR_LOCAL_TEMP_OUTPUT}/${LOG_PREFIX}-stdout | grep 'Instance is Compliant' | grep -v grep)
+                prom=$(cat "${DIR_LOCAL_TEMP_OUTPUT}"/"${LOG_PREFIX}"-stdout | grep 'Instance is Compliant' | grep -v grep)
                 [[ $? -eq 0 ]] && echo -e "${red_color}Instance is Compliant${clear_color}"
                 echo -e "${prom}"
                 echo ""
-                prom=$(cat ${DIR_LOCAL_TEMP_OUTPUT}/${LOG_PREFIX}-stdout | grep -A3 'Instance is Non-Compliant' | grep -v grep)
+                prom=$(cat "${DIR_LOCAL_TEMP_OUTPUT}"/"${LOG_PREFIX}"-stdout | grep -A3 'Instance is Non-Compliant' | grep -v grep)
                 [[ $? -eq 0 ]] && echo -e "${red_color}Instance is Non-Compliant${clear_color}"
                 echo -e "${prom}"
                 echo -e "\n\n"
                 ;;
             'Install')
                 echo -e "\n\n"
-                prom=$(cat ${DIR_LOCAL_TEMP_OUTPUT}/${LOG_PREFIX}-stdout | grep 'Instance is Compliant' | grep -v grep)
+                prom=$(cat "${DIR_LOCAL_TEMP_OUTPUT}"/"${LOG_PREFIX}"-stdout | grep 'Instance is Compliant' | grep -v grep)
                 [[ $? -eq 0 ]] && echo -e "${yellow_color}Instance is Compliant${clear_color}"
                 echo -e "${prom}"
                 echo -e "\n\n"

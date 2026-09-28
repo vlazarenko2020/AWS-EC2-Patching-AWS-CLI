@@ -9,20 +9,32 @@ A single Bash script that patches EC2 instances via AWS Systems Manager (SSM), u
 until it succeeds, then downloads the resulting stdout/stderr logs from S3 and greps them for
 human-readable results (compliance status on Linux, missing/installed updates on Windows).
 
-There is no build, test, or lint tooling — this is an operational script, not an application.
+There is no build tooling — this is an operational script, not an application. Linting is done
+with shellcheck via `./lint.sh` (see below).
+
+## Linting
+
+```bash
+./lint.sh
+```
+
+Runs `shellcheck` over every `*.sh` file in the repo. Requires `shellcheck` to be installed
+(`apt-get install shellcheck` on Debian/Ubuntu). There is no automated test suite.
 
 ## Running the script
 
 ```bash
 cd patching_simple
-./patch_run_passing_instanceid_as_argument.sh -i <instance-id> -a <Scan|Install> -o <L|W>
+./patch_run_passing_instanceid_as_argument.sh -i <instance-id> -a <Scan|Install> -o <L|W> -b <bucket-name>
 ```
 
 - `-i` : EC2 instance ID
 - `-a` : action type passed straight through as the SSM `Operation` parameter — must be `Scan` or `Install`
 - `-o` : target OS — `L` for Linux, `W` for Windows (controls which S3 log path and grep patterns are used)
+- `-b` : S3 bucket name used for SSM command output (mandatory)
 
-All three flags are required (the arg parser hard-requires exactly 6 tokens on the command line).
+All four flags are required (the arg parser hard-requires at least 8 tokens on the command line
+and validates `-b` is non-empty).
 See `patching_simple/__HOW_TO_RUN.txt` for real example invocations and expected output.
 
 Requires AWS CLI configured with a profile named `ARDSAdmin` (hardcoded as `MY_PROFILE`) that has

@@ -1,0 +1,8 @@
+
+
+cd patching_simple
+
+--- Linux
+./patch_run_passing_instanceid_as_argument.sh -i i-xxxx -a Scan -o L -b my-bucket-name
+
+
